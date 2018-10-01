@@ -151,6 +151,7 @@ class GetAllOrder(MethodView):
         order = self.cursor.fetchone()
         if not order:
             return "Order not available at the moment"
+            
     # def update_order_status(self,user_id,order_now):
     #     """
     #          this is a method for updating an order_status
