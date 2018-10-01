@@ -151,17 +151,17 @@ class GetAllOrder(MethodView):
         order = self.cursor.fetchone()
         if not order:
             return "Order not available at the moment"
-    def update_order_status(self,user_id,order_now):
-        """
-             this is a method for updating an order_status
-        """
-        self.cursor.execute("SELECT * FROM orders WHERE order_now = %s",[order_now])
-        check_status = self.cursor.fetchone()
-        if check_status:
-            return 'order was deliverd'
-        put_status_query = "INSERT INTO orders(user_id,order_id,order_now) VALUES('"+user_id+"','"+order_id+"','"+order_now+"')"
-        self.cursor.execute(put_status_query)
-        return "Order has been delivered"
+    # def update_order_status(self,user_id,order_now):
+    #     """
+    #          this is a method for updating an order_status
+    #     """
+    #     self.cursor.execute("SELECT * FROM orders WHERE order_now = %s",[order_now])
+    #     check_status = self.cursor.fetchone()
+    #     if check_status:
+    #         return 'order was deliverd'
+    #     put_status_query = "INSERT INTO orders(user_id,order_id,order_now) VALUES('"+user_id+"','"+order_id+"','"+order_now+"')"
+    #     self.cursor.execute(put_status_query)
+    #     return "Order has been delivered"
 
 
 
