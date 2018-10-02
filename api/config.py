@@ -17,8 +17,8 @@ class DevelopmentConfig(Config):
     TESTING = True
     ENV = "development"
     SECRET_KEY = 'codeislove'
-class TestingConfig(Config):
-    """
+# class TestingConfig(Config):
+#     """
     
 
 
