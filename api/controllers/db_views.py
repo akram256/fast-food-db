@@ -71,7 +71,7 @@ class GetAllOrder(MethodView):
                 self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
             else:
                 self.connection = psycopg2.connect(dbname='fast_food-DB',
-                                                   user='akram',
+                                                   user='postgres',
                                                    password='12345',
                                                    host='localhost',
                                                    port='5432')
@@ -137,17 +137,18 @@ class GetAllOrder(MethodView):
         if not order:
             return "Order not available at the moment"
 
-    def update_order_status(self,user_id,order_now):
+    def update_order_status(self,order_id,order_now):
         """
              this is a method for updating an order_status
         """
-        self.cursor.execute("SELECT * FROM orders WHERE order_now = %s",[order_now])
+        self.cursor.execute("SELECT * FROM orders WHERE order_id = %s",[order_id])
         check_status = self.cursor.fetchone()
         if check_status:
             return "order needs updating"
-        put_status_query = "UPDATE INTO orders(user_id,order_now) VALUES('"+user_id+"','"+order_now+"')"
+        put_status_query = "UPDATE INTO orders(order_now) VALUES('"+order_now+"')"
         self.cursor.execute(put_status_query)
         return put_status_query
+
 
     def specify_user_order(self):
         """
