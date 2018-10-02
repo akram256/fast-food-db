@@ -70,8 +70,8 @@ class GetAllOrder(MethodView):
             if(os.getenv("FLASK_ENV")) == "Production":
                 self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
             else:
-                self.connection = psycopg2.connect(dbname='fast_food-DB',
-                                                   user='postgres',
+                self.connection = psycopg2.connect(dbname='fooddb',
+                                                   user='akram',
                                                    password='12345',
                                                    host='localhost',
                                                    port='5432')
@@ -141,13 +141,14 @@ class GetAllOrder(MethodView):
         """
              this is a method for updating an order_status
         """
-        self.cursor.execute("SELECT * FROM orders WHERE order_id = %s",[order_id])
+        self.cursor.execute("SELECT * FROM orders WHERE order_id = %s;",(order_id,) )
         check_status = self.cursor.fetchone()
-        if check_status:
-            return "order needs updating"
-        put_status_query = "UPDATE INTO orders(order_now) VALUES('"+order_now+"')"
-        self.cursor.execute(put_status_query)
-        return put_status_query
+        if not check_status:
+            return "No order"
+        put_status_query = "UPDATE  orders SET order_now = %s WHERE order_id = %s;"
+        self.cursor.execute(put_status_query,(order_now,order_id, ))
+        update_status = self.cursor.rowcount
+        return jsonify ({'message':update_status})
 
 
     def specify_user_order(self):
