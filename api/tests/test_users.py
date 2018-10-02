@@ -22,7 +22,7 @@ class TestViews(unittest.TestCase):
         APP.config['TESTING'] = True
         self.app = APP
         self.client = APP.test_client
-        GetAllOrder.__init__(APP) 
+        # GetAllOrder.__init__(APP) 
     def test_sign(self):
         """
             Method for testing the post function which adds new user
@@ -151,7 +151,7 @@ class TestViews(unittest.TestCase):
             if(os.getenv("FLASK_ENV")) == "Production":
                 self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
             else:
-                self.connection = psycopg2.connect(dbname='fast_food-DB',
+                self.connection = psycopg2.connect(dbname='fooddb',
                                                    user='akram',
                                                    password='12345',
                                                    host='localhost',

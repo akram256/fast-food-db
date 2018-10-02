@@ -21,7 +21,7 @@ class TestViews(unittest.TestCase):
         self.client = APP.test_client
         APP.config['TESTING'] = True
         self.app = APP
-        GetAllOrder.__init__(APP)
+        # GetAllOrder.__init__(APP)
 
     def test_fetch_all_orders(self):
         """
@@ -111,10 +111,10 @@ class TestViews(unittest.TestCase):
             """DROP TABLE IF EXISTS "orders" CASCADE;""",
             """DROP TABLE IF EXISTS "menus" CASCADE;""")
         try:
-            if(os.getenv("FLASK_ENV")) == "Production":
+            if(os.getenv("FLASK_ENV")) == "TESTING":
                 self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
             else:
-                self.connection = psycopg2.connect(dbname='fast_food-DB',
+                self.connection = psycopg2.connect(dbname='fooddb',
                                                    user='akram',
                                                    password='12345',
                                                    host='localhost',
