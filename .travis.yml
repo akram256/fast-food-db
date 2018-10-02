@@ -6,7 +6,7 @@ install:
 services:
   - postgresql
 before_script:
-  - psql -c 'create database testdb;'  -U akram
+  - psql -c 'create database testdb;'  -U postgres
 addons:
   postgresql: "9.4"
 script:
