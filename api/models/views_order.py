@@ -114,31 +114,44 @@ class Getorder(MethodView):
         if orders_list == "No orders available at the moment":
             return jsonify({"Order": orders_list}), 404
         return jsonify({"Order": orders_list}), 200
+
+class GetSpecific(MethodView):
     @jwt_required
-    def put(self):
+    def get(self,user_id,order_id=None):
+        """
+            this method returns orders for a particular user
+        """
+        user_id = get_jwt_identity()
+        if user_id:
+            one_user = GetAllOrder()
+            user_list = one_user.specify_user_order()
+            if user_list== "user has not made orders yet":
+                return jsonify({"orders":"No orders"}),404
+            return jsonify({"orders":user_list}),200
+
+class Update(MethodView):
+    """
+        Class to get all orders
+       params: order_status
+       respone: json data
+    """
+    @jwt_required
+    def put(self,order_now):
         """
             this method for putting or updating the order_status
         """
+        keys = ("order_now")
+        if not set(keys).issubset(set(request.json)):
+            return jsonify({'message': 'Your request has Empty feilds'}), 400
         if request.json["order_now"] == "":
             return jsonify({'Missing status': 'Please update the status'}), 400
 
         user_id = get_jwt_identity()
-        order_status = GetAllOrder()
-        new_order_status = order_status.update_order_status(str(user_id), request.json['order_status'].strip())
+        check_order_status = GetAllOrder()
+        new_order_status = check_order_status.update_order_status(str(user_id), request.json['order_now'].strip())
 
         if new_order_status:
             return jsonify({'message': new_order_status}), 200
-
-    # def get(self, user_id):
-    #     """
-    #         this method returns orders for a particular user
-    #     """
-    #     if user_id:
-    #         user_object = GetAllOrder()
-    #         user_list = user_object.specific_user_order()
-    #         if user_list== "user has not made orders yet":
-    #             return jsonify({"orders":"No orders"}),404
-    #         return jsonify({"orders":user_list}),200
 
 
 class PlaceOrder(MethodView):
@@ -149,20 +162,23 @@ class PlaceOrder(MethodView):
     def post(self):
         """
             this is a method for placing an order
-        """    
-        if not request.json['item_id']:
-            return jsonify({'message': "The fields should not be empty, Please fill it"}), 400
+        """   
+        # key = ("item_id")
 
-        if request.json["item_id"] == "":
+        # if not set(key).issubset(set(request.json)):
+        #     return jsonify({'message': 'Your request has Empty feilds'}), 400
+        
+        if not  request.json['item_id']:
             return jsonify({'Missing item': 'Please input the item_id'}), 400
 
         user_id = get_jwt_identity()
         new_order = GetAllOrder()
-        new_order_data = new_order.place_new_order(str(user_id), request.json['item_id'].strip())
+        new_order_data = new_order.place_new_order(str(user_id), request.json ['item_id'])
 
         if new_order_data:
-            return jsonify({'message': "Hold on, order will be delivered shortly"}), 401
             return jsonify({'message': new_order_data}), 201
+        
+            
 
 class Menu(MethodView):
     """
@@ -174,14 +190,18 @@ class Menu(MethodView):
         """
             This is a method for posting a food_item on to the menu
         """
-        if not request.json['item_name']:
+        user_id = get_jwt_identity()
+        # import pdb; pdb.set_trace()
+        # key = ("item_name")
+
+        # if not set(key).issubset(set(request.json)):
+        #     return jsonify({'message': 'Your request has Empty feilds'}), 400
+       
+        if not  request.json['item_name']:
             return jsonify({'message': "The fields should not be empty, Please fill it"}), 400
 
-        user_id = get_jwt_identity()
-     
-
         new_item = GetAllOrder()
-        new_item_data = new_item.add_item_to_menu(str(user_id), request.json['item_name'].strip())
+        new_item_data = new_item.add_item_to_menu(str(user_id), request.json ['item_name'].strip())
 
         if new_item_data == 'item already exists on the menu':
             return jsonify({'message': "Sorry, the item already exist on the menu"}), 401

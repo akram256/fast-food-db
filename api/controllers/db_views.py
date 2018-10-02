@@ -85,10 +85,9 @@ class GetAllOrder(MethodView):
 
     def register_a_user(self, username, email, password):
         """
-           Method for
+           Method for registering a user
         """
-        # connection = psycopg2.connect("""dbname='fastfood' user='akram'  host='localhost'password='12345'  port='5432'""" )
-        # return connection
+  
 
         self.cursor.execute("SELECT * FROM users WHERE email = %s", [email])
         check_email = self.cursor.fetchone()
@@ -102,30 +101,14 @@ class GetAllOrder(MethodView):
 
     def fetch_password(self, email, password):
         """
-           Method for
+           Method for fetching the user_password
         """
         self.cursor.execute("SELECT * FROM users")
         users = self.cursor.fetchall()
         for user in users:
             if user[2] == email and check_password_hash(user[3], password):
                 return user[0]
-        return None
-    
-    # def update_user_status(self,status, user_id):
-    #     """
-    #     This method updates a usertype when admin to true
-    #     and to false when a user.
-    #     """
-    #     user_now = """UPDATE "users" SET is_loggedin = %s
-    #                 WHERE user_id = %s"""
-    #     if status:
-    #         edit_data = (True, user_id)
-    #     else:
-    #         edit_data = (False, user_id)
-    #     Order.edit(user_now, edit_data)
-    #     if status:
-    #         return None
-    #     return True   
+        return None  
 
     def get_all_orders(self):
         """
@@ -147,56 +130,56 @@ class GetAllOrder(MethodView):
            Method for getting a specific order using an inserted_order_id
         """
         self.cursor.execute("SELECT * FROM orders WHERE order_id = %s", [inserted_order_id])
-        keys = ["order_id", "user_id", "item_id","order_status", "order_date"]
+       
+
+        keys = ["order_id", "user_id", "item_id","order_now", "order_date"]
         order = self.cursor.fetchone()
         if not order:
             return "Order not available at the moment"
-            
-    # def update_order_status(self,user_id,order_now):
-    #     """
-    #          this is a method for updating an order_status
-    #     """
-    #     self.cursor.execute("SELECT * FROM orders WHERE order_now = %s",[order_now])
-    #     check_status = self.cursor.fetchone()
-    #     if check_status:
-    #         return 'order was deliverd'
-    #     put_status_query = "INSERT INTO orders(user_id,order_id,order_now) VALUES('"+user_id+"','"+order_id+"','"+order_now+"')"
-    #     self.cursor.execute(put_status_query)
-    #     return "Order has been delivered"
 
+    def update_order_status(self,user_id,order_now):
+        """
+             this is a method for updating an order_status
+        """
+        self.cursor.execute("SELECT * FROM orders WHERE order_now = %s",[order_now])
+        check_status = self.cursor.fetchone()
+        if check_status:
+            return "order needs updating"
+        put_status_query = "UPDATE INTO orders(user_id,order_now) VALUES('"+user_id+"','"+order_now+"')"
+        self.cursor.execute(put_status_query)
+        return put_status_query
 
-
-
-    # def specific_user_order(self, user_id):
-    #     """
-    #         this method is for getting orders for a specific user
-    #     """
-    #     self.cursor.execute("SELECT * FROM orders WHERE user_id =%s")
-    #     keys =["order_id","user_id","item_id","item_name"]
-    #     orders = self.cursor.fetchall()
-    #     specfic_list = []
-    #     for order in orders:
-    #         order_list.append(dict(zip(keys, order)))
-    #     if not specfic_list:
-    #         return "user has not made orders yet"
-    #     return specfic_list
+    def specify_user_order(self):
+        """
+            this method is for getting orders for a specific user
+        """
+        order_query_user= "SELECT * FROM orders"
+        self.cursor.execute(order_query_user)
+        keys =["order_id","user_id","item_id","item_name"]
+        orders = self.cursor.fetchall()
+        specfic_list = []
+        for order in orders:
+            specfic_list.append(dict(zip(keys, order)))
+        if not specfic_list:
+            return "user has not made orders yet"
+        return specfic_list
         
-    def place_new_order(self, user_id, menu_item_id):
+    def place_new_order(self, user_id, item_id):
         """
            Method for placing an order
            params: order_now
         """
        
-        self.cursor.execute("SELECT * FROM menus WHERE item_id= %s", [menu_item_id])
-        check_an_order = self.cursor.fetchone()
-        if check_an_order:
-            return "This order is being processed"
+        self.cursor.execute("SELECT * FROM orders WHERE item_id= %s",(item_id, ) )
+        data=self.cursor.fetchone()
+        print(data)
+        add_order_query = "INSERT INTO orders(user_id, item_id) VALUES( %s,%s);"
 
-        add_order_query = "INSERT INTO orders(user_id, item_id) VALUES( '"+user_id+"', '"+menu_item_id+"')"
-        self.cursor.execute(add_order_query)
+        self.cursor.execute(add_order_query,(user_id,item_id,))
         return "Order has been Placed successfully"
 
     def add_item_to_menu(self, user_id, item_name):
+
         self.cursor.execute("SELECT * FROM menus WHERE item_name = %s",[item_name])
         check_item_on_menu = self.cursor.fetchone()
         if check_item_on_menu:

@@ -2,7 +2,7 @@
 This module handels requests to urls.
 """
 from flask.views import MethodView
-from api.models.views_order import SignUp, Login, PlaceOrder,Getorder,Menu
+from api.models.views_order import SignUp, Login, PlaceOrder,Getorder,Menu,Update,GetSpecific
 # from models.db_link import linkdb
 
 
@@ -23,12 +23,14 @@ class Urls(object):
         app.add_url_rule('/api/v1/auth/login',
                          view_func=Login.as_view('Login'), methods=['POST',])
         app.add_url_rule('/api/v1/orders',
-                         view_func=Getorder.as_view('orders'),
+                         view_func=Getorder.as_view('PlaceOrder'),
                          defaults={'order_id': None}, methods=['GET',])
         app.add_url_rule('/api/v1/orders/<int:order_id>',
                          view_func=Getorder.as_view('one_order'), methods=['GET',])
+        app.add_url_rule('/api/v1/order/<int:order_id>',
+                         view_func=Update.as_view('update order'), methods=['PUT',])
         app.add_url_rule('/api/v1/users/orders',
-                         view_func=Getorder.as_view('get order for specific user'), defaults={'user_id': None},methods=['GET',])
+                         view_func=GetSpecific.as_view('get order for specific user'), defaults={'order_id': None, 'user_id':None},methods=['GET',])
         app.add_url_rule('/api/v1/orders/<int:order_id>',
                          view_func=Getorder.as_view('update order_status'), methods=['PUT',]) 
         app.add_url_rule('/api/v1/users/orders',
@@ -39,6 +41,5 @@ class Urls(object):
                          view_func=Menu.as_view('get menu'),
                          defaults={'item_id': None}, methods=['GET',])
 
-        # app.add_url_rule('/api/v1/menu/<int:item_id>',
-        #                  view_func=Menu.as_view('add new item'), methods=['GET',])
+        
         

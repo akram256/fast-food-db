@@ -5,7 +5,7 @@ class Config(object):
     """
        Method for defining the default environment
     """  
-    DEBUG = False
+    DEBUG = True
     TESTING = True
     SECRET_KEY = 'codeislove'
 
@@ -17,4 +17,10 @@ class DevelopmentConfig(Config):
     TESTING = True
     ENV = "development"
     SECRET_KEY = 'codeislove'
+class TestingConfig(Config):
+    """
+    
+
+
+
     
