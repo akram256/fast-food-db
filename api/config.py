@@ -1,6 +1,7 @@
 """
    Module for for defining the configurations
 """  
+import os
 class Config(object):
     """
        Method for defining the default environment
@@ -19,8 +20,15 @@ class DevelopmentConfig(Config):
     SECRET_KEY = 'codeislove'
 class TestingConfig(Config):
     """
-    
-
+        method for defining the development environment
+    """
+    if os.getenv("Testing"):
+        DATABASE_URL = 'postgres://postgres@host/fooddb'
+    DEBUG = True
+    TESTING = True
+    ENV = "TESTING"
+    SECRET_KEY = 'codeislove'
+    DATABASE ='fooddb'
 
 
     
