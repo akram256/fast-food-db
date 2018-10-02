@@ -71,7 +71,7 @@ class GetAllOrder(MethodView):
                 self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
             else:
                 self.connection = psycopg2.connect(dbname='fooddb',
-                                                   user='akram',
+                                                   user='postgres',
                                                    password='12345',
                                                    host='localhost',
                                                    port='5432')
@@ -141,7 +141,7 @@ class GetAllOrder(MethodView):
         """
              this is a method for updating an order_status
         """
-        self.cursor.execute("SELECT * FROM orders WHERE order_id = %s;",(order_id,) )
+        self.cursor.execute("SELECT * FROM orders WHERE order_id = '%s'" % order_id)
         check_status = self.cursor.fetchone()
         if not check_status:
             return "No order"

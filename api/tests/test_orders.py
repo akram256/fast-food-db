@@ -105,24 +105,24 @@ class TestViews(unittest.TestCase):
         self.assertIsInstance(respond, dict, )
         
     
-    def tearDown(self):
-        commands = (
-            """DROP TABLE IF EXISTS "users" CASCADE;""",
-            """DROP TABLE IF EXISTS "orders" CASCADE;""",
-            """DROP TABLE IF EXISTS "menus" CASCADE;""")
-        try:
-            if(os.getenv("FLASK_ENV")) == "Production":
-                self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
-            else:
-                self.connection = psycopg2.connect(dbname='fooddb',
-                                                   user='akram',
-                                                   password='12345',
-                                                   host='localhost',
-                                                   port='5432')
-            self.connection.autocommit = True
-            self.cursor = self.connection.cursor()
-            for command in commands:
-                self.cursor.execute(command)
-        except(Exception, psycopg2.DatabaseError) as error:
+    # def tearDown(self):
+    #     commands = (
+    #         """DROP TABLE IF EXISTS "users" CASCADE;""",
+    #         """DROP TABLE IF EXISTS "orders" CASCADE;""",
+    #         """DROP TABLE IF EXISTS "menus" CASCADE;""")
+    #     try:
+    #         if(os.getenv("FLASK_ENV")) == "Production":
+    #             self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
+    #         else:
+    #             self.connection = psycopg2.connect(dbname='fooddb',
+    #                                                user='akram',
+    #                                                password='12345',
+    #                                                host='localhost',
+    #                                                port='5432')
+    #         self.connection.autocommit = True
+    #         self.cursor = self.connection.cursor()
+    #         for command in commands:
+    #             self.cursor.execute(command)
+    #     except(Exception, psycopg2.DatabaseError) as error:
 
-            raise error
+    #         raise error
