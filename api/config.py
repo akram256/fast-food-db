@@ -18,6 +18,7 @@ class DevelopmentConfig(Config):
     TESTING = True
     ENV = "development"
     SECRET_KEY = 'codeislove'
+<<<<<<< HEAD
 class TestingConfig(Config):
     """
         method for defining the development environment
@@ -29,6 +30,8 @@ class TestingConfig(Config):
     ENV = "TESTING"
     SECRET_KEY = 'codeislove'
     DATABASE ='fooddb'
+
+
 
 
     
