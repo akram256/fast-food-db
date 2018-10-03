@@ -2,7 +2,7 @@
 This module handels requests to urls.
 """
 from flask.views import MethodView
-from api.models.views_order import SignUp, Login, PlaceOrder,Getorder,Menu,Update,GetSpecific
+from api.controllers.order_views import SignUp, Login, PlaceOrder,Getorder,Menu,Update,GetSpecific
 # from models.db_link import linkdb
 
 
@@ -31,8 +31,6 @@ class Urls(object):
                          view_func=Update.as_view('update order'), methods=['PUT',])
         app.add_url_rule('/api/v1/users/orders',
                          view_func=GetSpecific.as_view('get order for specific user'), defaults={'order_id': None, 'user_id':None},methods=['GET',])
-        app.add_url_rule('/api/v1/orders/<int:order_id>',
-                         view_func=Getorder.as_view('update order_status'), methods=['PUT',]) 
         app.add_url_rule('/api/v1/users/orders',
                          view_func=PlaceOrder.as_view('add order'), methods=['POST',])
         app.add_url_rule('/api/v1/menu',

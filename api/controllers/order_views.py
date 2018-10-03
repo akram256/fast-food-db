@@ -4,7 +4,7 @@ This module provides responses to url requests.
 import re
 from flask import jsonify, request
 from flask.views import MethodView
-from api.controllers.db_views import GetAllOrder
+from api.models.db_model import GetAllOrder
 from flask_jwt_extended import  jwt_required, create_access_token, get_jwt_identity
 
 
@@ -96,6 +96,7 @@ class Getorder(MethodView):
        params: order_id
        respone: json data
     """
+    @jwt_required
     def get(self, order_id):
         """
            get method for get order history
@@ -104,11 +105,17 @@ class Getorder(MethodView):
         """
         
         if order_id is None:
-            order_object = GetAllOrder()
-            orders_list = order_object.get_all_orders()
-            if orders_list == "No orders available at the moment":
-                return jsonify({"Orders": orders_list}), 404
-            return jsonify({"Orders": orders_list}), 200
+            user_id = get_jwt_identity()
+            new_order = GetAllOrder()
+            is_admin_now = new_order.get_user_with_id(user_id)
+            if user_id and not  is_admin_now :
+                order_object = GetAllOrder()
+                orders_list = order_object.get_all_orders()
+                if orders_list == "No orders available at the moment":
+                    return jsonify({"Orders": orders_list}), 404
+                return jsonify({"Orders": orders_list}), 200
+            return jsonify({'Alert':"Not Authorised to perform this task"})
+            
 
         order_object = GetAllOrder()
         orders_list = order_object.get_one_order(order_id)
@@ -126,7 +133,7 @@ class GetSpecific(MethodView):
         user_id = get_jwt_identity()
         new_order = GetAllOrder()
         is_admin_now = new_order.get_user_with_id(user_id)
-        if user_id and not is_admin_now :
+        if user_id and is_admin_now :
             if user_id:
                 one_user = GetAllOrder()
                 user_list = one_user.specify_user_order()
@@ -209,7 +216,7 @@ class Menu(MethodView):
         # import pdb; pdb.set_trace()
         new_order = GetAllOrder()
         is_admin_now = new_order.get_user_with_id(user_id)
-        if user_id and  is_admin_now :
+        if user_id and not is_admin_now :
             key = ("item_name",)
             if not set(key).issubset(set(request.json)):
                 return jsonify({'message': 'Your request has Empty feilds'}), 400

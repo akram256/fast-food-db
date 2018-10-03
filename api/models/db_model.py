@@ -33,7 +33,7 @@ class GetAllOrder(MethodView):
                     username VARCHAR(50) NOT NULL,
                     email VARCHAR(50) UNIQUE NOT NULL,
                     password VARCHAR(80) NOT NULL,
-                    is_admin BOOLEAN NULL DEFAULT TRUE
+                    is_admin BOOLEAN NULL DEFAULT FALSE
                     
                 )
             """,
@@ -176,7 +176,7 @@ class GetAllOrder(MethodView):
            params: order_now
         """
        
-        self.cursor.execute("SELECT * FROM orders WHERE item_id= %s",(item_id, ) )
+        self.cursor.execute("SELECT * FROM menus WHERE item_id= %s",(item_id, ) )
         data=self.cursor.fetchone()
         print(data)
         add_order_query = "INSERT INTO orders(user_id, item_id) VALUES( %s,%s);"
