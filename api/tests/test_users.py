@@ -21,9 +21,9 @@ class TestViews(unittest.TestCase):
         # self.client = APP.test_client
         if os.getenv("TESTING"):
             self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
-        else:
-            APP.config['Development'] = True
-            self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
+        # else:
+        #     APP.config['Development'] = True
+        #     self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
         self.app = APP
         self.client = APP.test_client 
     def test_sign(self):
