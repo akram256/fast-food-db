@@ -157,16 +157,17 @@ class GetAllOrder(MethodView):
         """
              this is a method for updating an order_status
         """
-        self.cursor.execute("SELECT * FROM orders WHERE order_id= %s",(order_id, ) )
-        check_status=self.cursor.fetchall()
+        self.cursor.execute("""SELECT "order_id" FROM orders WHERE order_id= %s""",(order_id, ) )
+        check_status=self.cursor.fetchone()
+        print(check_status)
         if not check_status:
             return "No order"
         put_status_query = "UPDATE  orders SET order_now = %s WHERE order_id = %s;"
-        self.cursor.execute(put_status_query,(order_now,order_id, ))
+        self.cursor.execute(put_status_query,(order_now, order_id, ))
         updated_rows = self.cursor.rowcount
-        if updated_rows:
-            return updated_rows
-        return "No orders to update"
+        # if updated_rows:
+        return updated_rows
+        # return "No orders to update"
 
 
     def specify_user_order(self):
@@ -175,7 +176,7 @@ class GetAllOrder(MethodView):
         """
         order_query_user= "SELECT * FROM orders"
         self.cursor.execute(order_query_user)
-        keys =["order_id","user_id","item_id","item_name"]
+        keys =["order_id","order_now","user_id","item_id"]
         orders = self.cursor.fetchall()
         specfic_list = []
         for order in orders:

@@ -23,12 +23,12 @@ class TestingConfig(Config):
         method for defining the development environment
     """
     if os.getenv("TESTING"):
-        DATABASE_URL = 'postgres://postgres@host/fooddb'
+        DATABASE_URL = 'postgres://postgres@host/fastfud'
     DEBUG = True
     TESTING = True
     ENV = "TESTING"
     SECRET_KEY = 'codeislove'
-    DATABASE ='fooddb'
+    DATABASE ='fastfud'
 
 
 

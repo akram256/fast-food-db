@@ -164,10 +164,9 @@ class Update(MethodView):
 
             if request.json["order_now"] == "":
                 return jsonify({'Missing status': 'Please update the status'}), 400
-
-           
+      
             check_order_status = GetAllOrder()
-            new_order_status = check_order_status.update_order_status(str(user_id), request.json['order_now'].strip())
+            new_order_status = check_order_status.update_order_status(str(order_id), request.json['order_now'].strip())
 
             if new_order_status:
                 return jsonify({'message': "Order_status has been updated"}), 200
@@ -193,12 +192,12 @@ class PlaceOrder(MethodView):
 
         new_order = GetAllOrder()
         user_id = get_jwt_identity()
-        is_admin_now = new_order.get_user_with_id(user_id)
-        if user_id and  is_admin_now :
-            new_order_data = new_order.place_new_order(str(user_id), request.json ['item_id'])
-            if new_order_data:
-                return jsonify({'message': new_order_data}), 201
-        return jsonify({'Alert':"Not Authorised to perform this task"})
+        # is_admin_now = new_order.get_user_with_id(user_id)
+        # if user_id and  is_admin_now :
+        new_order_data = new_order.place_new_order(str(user_id), request.json ['item_id'])
+        if new_order_data:
+            return jsonify({'message': new_order_data}), 201
+        # return jsonify({'Alert':"Not Authorised to perform this task"})
         
             
 

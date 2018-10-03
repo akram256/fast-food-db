@@ -6,8 +6,8 @@ import json
 import psycopg2
 from run import APP
 from api.models.db_model import GetAllOrder
+from api.config import TestingConfig
 import os
-
 class TestViews(unittest.TestCase):
     """"
         Class for testing  signing up
@@ -19,10 +19,13 @@ class TestViews(unittest.TestCase):
            Method for making the client object
         """
         # self.client = APP.test_client
-        APP.config['TESTING'] = True
+        if os.getenv("TESTING"):
+            self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
+        else:
+            APP.config['Development'] = True
+            self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
         self.app = APP
-        self.client = APP.test_client
-        # GetAllOrder.__init__(APP) 
+        self.client = APP.test_client 
     def test_sign(self):
         """
             Method for testing the post function which adds new user
