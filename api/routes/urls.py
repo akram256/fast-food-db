@@ -27,7 +27,7 @@ class Urls(object):
                          defaults={'order_id': None}, methods=['GET',])
         app.add_url_rule('/api/v1/orders/<int:order_id>',
                          view_func=Getorder.as_view('one_order'), methods=['GET',])
-        app.add_url_rule('/api/v1/order/<int:order_id>',
+        app.add_url_rule('/api/v1/orders/<int:order_id>',
                          view_func=Update.as_view('update order'), methods=['PUT',])
         app.add_url_rule('/api/v1/users/orders',
                          view_func=GetSpecific.as_view('get order for specific user'), defaults={'order_id': None, 'user_id':None},methods=['GET',])

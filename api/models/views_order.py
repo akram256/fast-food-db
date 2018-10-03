@@ -102,6 +102,7 @@ class Getorder(MethodView):
            param: route /api/v1/orders and /api/v1/orders/<int:order_id>
            response: json data get_all_orders() and self.get_one_order(order_id)
         """
+        
         if order_id is None:
             order_object = GetAllOrder()
             orders_list = order_object.get_all_orders()
@@ -112,7 +113,7 @@ class Getorder(MethodView):
         order_object = GetAllOrder()
         orders_list = order_object.get_one_order(order_id)
         if orders_list == "No orders available at the moment":
-            return jsonify({"Order": orders_list}), 404
+            return jsonify({"Order": "No orders found at the moment for the order_id"}), 404
         return jsonify({"Order": orders_list}), 200
 
 class GetSpecific(MethodView):
@@ -121,13 +122,18 @@ class GetSpecific(MethodView):
         """
             this method returns orders for a particular user
         """
+        
         user_id = get_jwt_identity()
-        if user_id:
-            one_user = GetAllOrder()
-            user_list = one_user.specify_user_order()
-            if user_list== "user has not made orders yet":
-                return jsonify({"orders":"No orders"}),404
-            return jsonify({"orders":user_list}),200
+        new_order = GetAllOrder()
+        is_admin_now = new_order.get_user_with_id(user_id)
+        if user_id and not is_admin_now :
+            if user_id:
+                one_user = GetAllOrder()
+                user_list = one_user.specify_user_order()
+                if user_list== "user has not made orders yet":
+                    return jsonify({"orders":"No orders"}),404
+                return jsonify({"orders":user_list}),200
+        return jsonify({'Alert':"Not Authorised to perform this task"})
 
 class Update(MethodView):
     """
@@ -136,23 +142,30 @@ class Update(MethodView):
        respone: json data
     """
     @jwt_required
-    def put(self,order_now):
+    def put(self,order_id):
         """
             this method for putting or updating the order_status
         """
-        keys = ("order_now")
-        if not set(keys).issubset(set(request.json)):
-            return jsonify({'message': 'Your request has Empty feilds'}), 400
-        if request.json["order_now"] == "":
-            return jsonify({'Missing status': 'Please update the status'}), 400
-
         user_id = get_jwt_identity()
-        check_order_status = GetAllOrder()
-        new_order_status = check_order_status.update_order_status(str(user_id), request.json['order_now'].strip())
+        new_order = GetAllOrder()
+        user_id = get_jwt_identity()
+        is_admin_now = new_order.get_user_with_id(user_id)
+        if user_id and not is_admin_now :
+            keys = ("order_now",)
+            if not set(keys).issubset(set(request.json)):
+                return jsonify({'message': 'Your request has Empty feilds'}), 400
 
-        if new_order_status:
-            return jsonify({'message': new_order_status}), 200
+            if request.json["order_now"] == "":
+                return jsonify({'Missing status': 'Please update the status'}), 400
 
+           
+            check_order_status = GetAllOrder()
+            new_order_status = check_order_status.update_order_status(str(user_id), request.json['order_now'].strip())
+
+            if new_order_status:
+                return jsonify({'message': "Order_status has been updated"}), 200
+            return jsonify({"message":'No order to update'})
+        return jsonify({'Alert':"Not Authorised to perform this task"})
 
 class PlaceOrder(MethodView):
     """
@@ -163,20 +176,22 @@ class PlaceOrder(MethodView):
         """
             this is a method for placing an order
         """   
-        # key = ("item_id")
+        key = ("item_id",)
 
-        # if not set(key).issubset(set(request.json)):
-        #     return jsonify({'message': 'Your request has Empty feilds'}), 400
+        if not set(key).issubset(set(request.json)):
+            return jsonify({'message': 'Your request has Empty feilds'}), 400
         
         if not  request.json['item_id']:
             return jsonify({'Missing item': 'Please input the item_id'}), 400
 
-        user_id = get_jwt_identity()
         new_order = GetAllOrder()
-        new_order_data = new_order.place_new_order(str(user_id), request.json ['item_id'])
-
-        if new_order_data:
-            return jsonify({'message': new_order_data}), 201
+        user_id = get_jwt_identity()
+        is_admin_now = new_order.get_user_with_id(user_id)
+        if user_id and  is_admin_now :
+            new_order_data = new_order.place_new_order(str(user_id), request.json ['item_id'])
+            if new_order_data:
+                return jsonify({'message': new_order_data}), 201
+        return jsonify({'Alert':"Not Authorised to perform this task"})
         
             
 
@@ -192,20 +207,23 @@ class Menu(MethodView):
         """
         user_id = get_jwt_identity()
         # import pdb; pdb.set_trace()
-        # key = ("item_name")
-
-        # if not set(key).issubset(set(request.json)):
-        #     return jsonify({'message': 'Your request has Empty feilds'}), 400
+        new_order = GetAllOrder()
+        is_admin_now = new_order.get_user_with_id(user_id)
+        if user_id and  is_admin_now :
+            key = ("item_name",)
+            if not set(key).issubset(set(request.json)):
+                return jsonify({'message': 'Your request has Empty feilds'}), 400
        
-        if not  request.json['item_name']:
-            return jsonify({'message': "The fields should not be empty, Please fill it"}), 400
+            if not  request.json['item_name']:
+                return jsonify({'message': "The fields should not be empty, Please fill it"}), 400
 
-        new_item = GetAllOrder()
-        new_item_data = new_item.add_item_to_menu(str(user_id), request.json ['item_name'].strip())
+            new_item = GetAllOrder()
+            new_item_data = new_item.add_item_to_menu(str(user_id), request.json ['item_name'].strip())
 
-        if new_item_data == 'item already exists on the menu':
-            return jsonify({'message': "Sorry, the item already exist on the menu"}), 401
-        return jsonify({'message': new_item_data}), 201
+            if new_item_data == 'item already exists on the menu':
+                return jsonify({'message': "Sorry, the item already exist on the menu"}), 401
+            return jsonify({'message': new_item_data}), 201
+        return jsonify({'Alert':"Not Authorised to perform this task"})
 
     def get(self, item_id):
         """

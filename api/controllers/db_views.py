@@ -108,7 +108,7 @@ class GetAllOrder(MethodView):
         for user in users:
             if user[2] == email and check_password_hash(user[3], password):
                 return user[0]
-        return None  
+        return None 
 
     def get_all_orders(self):
         """
@@ -125,30 +125,34 @@ class GetAllOrder(MethodView):
             return "No orders available at the moment"
         return order_list
 
-    def get_one_order(self, inserted_order_id):
+    def get_one_order(self, order_id):
         """
            Method for getting a specific order using an inserted_order_id
         """
-        self.cursor.execute("SELECT * FROM orders WHERE order_id = %s", [inserted_order_id])
-       
-
-        keys = ["order_id", "user_id", "item_id","order_now", "order_date"]
-        order = self.cursor.fetchone()
-        if not order:
+        self.cursor.execute("SELECT * FROM orders WHERE order_id = %s", [order_id])
+        order_list = self.cursor.fetchone()
+        keys=["order_id", "order_now","user_id","item_id" ,"order_date"]
+        if not order_list:
             return "Order not available at the moment"
+        one_order_list = []
+        one_order_list.append(dict(zip(keys, order_list)))
+        return one_order_list
+
 
     def update_order_status(self,order_id,order_now):
         """
              this is a method for updating an order_status
         """
-        self.cursor.execute("SELECT * FROM orders WHERE order_id = '%s'" % order_id)
-        check_status = self.cursor.fetchone()
+        self.cursor.execute("SELECT * FROM orders WHERE order_id= %s",(order_id, ) )
+        check_status=self.cursor.fetchall()
         if not check_status:
             return "No order"
         put_status_query = "UPDATE  orders SET order_now = %s WHERE order_id = %s;"
         self.cursor.execute(put_status_query,(order_now,order_id, ))
-        update_status = self.cursor.rowcount
-        return jsonify ({'message':update_status})
+        updated_rows = self.cursor.rowcount
+        if updated_rows:
+            return updated_rows
+        return "No orders to update"
 
 
     def specify_user_order(self):
@@ -205,3 +209,15 @@ class GetAllOrder(MethodView):
         if not menu_list:
             return "No items on the menu, items will be added soon"
         return menu_list
+
+   
+    def get_user_with_id(self, user_id):
+        # self.cursor.execute("SELECT * FROM users WHERE user_id=%s", (user_id,))
+        # user_now = self.cursor.fetchone()
+        # if user_now:
+        #     return user_now
+        # return "user can not be found", 404
+        self.cursor.execute("SELECT * FROM users WHERE user_id = '{}' AND is_admin = True".format(user_id))
+        user_now = self.cursor.fetchone()
+        return user_now
+    

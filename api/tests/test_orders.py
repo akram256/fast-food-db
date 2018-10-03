@@ -64,7 +64,7 @@ class TestViews(unittest.TestCase):
     
     def test_post_with_an_empty_fields(self):
         """
-            Method for testing the post function for empty fields
+            Method for testing the post function for empty fields to place an order
         """
         result = self.client().post('/api/v1/users/orders',
                                     content_type="application/json",
