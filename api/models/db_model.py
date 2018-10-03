@@ -33,7 +33,7 @@ class GetAllOrder(MethodView):
                     username VARCHAR(50) NOT NULL,
                     email VARCHAR(50) UNIQUE NOT NULL,
                     password VARCHAR(80) NOT NULL,
-                    is_admin BOOLEAN NULL DEFAULT FALSE
+                    is_admin BOOLEAN NULL DEFAULT TRUE
                     
                 )
             """,
@@ -79,6 +79,20 @@ class GetAllOrder(MethodView):
             self.cursor = self.connection.cursor()
             for command in commands:
                 self.cursor.execute(command)
+
+            # if(os.getenv("FLASK_ENV")) == "TESTING":
+            #     self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
+            # else:
+            #     self.connection = psycopg2.connect(dbname='fastfud',
+            #                                        user='postgres',
+            #                                        password='12345',
+            #                                        host='localhost',
+            #                                        port='5432')
+            # self.connection.autocommit = True
+            # self.cursor = self.connection.cursor()
+            # for command in commands:
+            #     self.cursor.execute(command)
+
         except(Exception, psycopg2.DatabaseError) as error:
 
             raise error

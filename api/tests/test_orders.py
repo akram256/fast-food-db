@@ -5,7 +5,7 @@ import unittest
 import json
 import psycopg2
 from run import APP
-from api.controllers.db_views import GetAllOrder
+from api.models.db_model import GetAllOrder
 import os
 # from flask_jwt_extended import  jwt_required, create_access_token, get_jwt_identity
 class TestViews(unittest.TestCase):

@@ -5,7 +5,7 @@ import unittest
 import json
 import psycopg2
 from run import APP
-from api.controllers.db_views import GetAllOrder
+from api.models.db_model import GetAllOrder
 import os
 
 class TestViews(unittest.TestCase):
