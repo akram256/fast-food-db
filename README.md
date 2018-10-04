@@ -29,6 +29,7 @@ The  following are needed:
 
 ## Project links:
 **API endpoints:** The code of the endpoints can be accessed at my github account: https://github.com/akram256/fast-food-db
+HEROKU LINK:    https://fast-food-api-fast.herokuapp.com/api/v1/menu
 
 ## Project features
 **API endpoints**
