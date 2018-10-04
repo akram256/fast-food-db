@@ -8,7 +8,7 @@ env:
 services:
   - postgresql
 before_script:
-  - psql -c 'create database fooddb;'  -U postgres
+  - psql -c 'create database fastfud;'  -U postgres
 addons:
   postgresql: "9.4"
 script:
