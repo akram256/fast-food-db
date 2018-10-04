@@ -32,7 +32,7 @@ class TestingConfig(Config):
     DEBUG = True
     TESTING = True
     FLASK_ENV = "TESTING"
-    DATABASE_URL = 'postgresql://postgres:12345@localhost/fastfud'
+    DATABASE_URL = 'postgresql://postgres:@localhost/fastfud'
 
 
 # configurations = {

@@ -6,8 +6,11 @@ import json
 import psycopg2
 from run import APP
 from api.models.user_model import Users
+from api.models.order_model import Order_now
+from api.models.menu_model import Menu_now
 from api.config import TestingConfig
 import os
+from . import *
 class TestViews(unittest.TestCase):
     """"
         Class for testing  signing up
@@ -20,9 +23,11 @@ class TestViews(unittest.TestCase):
         """
         APP.config.from_object('api.config.TestingConfig')
         self.client = APP.test_client
-        with self.client():
+        with self.client() as client:
             down_tables = Users()
             down_tables.create_tables()
+            self.post_token = post_auth_header(client)
+            self.get_token = get_auth_header(client)
 
     def tearDown(self):
         """

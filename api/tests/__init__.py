@@ -4,8 +4,8 @@ module init tests
 """
 
 token_user = {
-    "user_name": "admin",
-    "email": "admin@gmail.com",
+    "user_name": "akram",
+    "email": "a4a@gmail.com",
     "password": "12345678",
 }
 OTHER_USER = {

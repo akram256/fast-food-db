@@ -8,6 +8,7 @@ from run import APP
 from api.models.user_model import Users
 from api.models.order_model import Order_now
 from api.models.menu_model import Menu_now
+from api.config import TestingConfig
 from . import *
 import os
 class TestViews(unittest.TestCase):
@@ -35,13 +36,22 @@ class TestViews(unittest.TestCase):
         with self.client():
             down_tables = Users()
             down_tables.delete_tables()
+
+    def test_place_an__order(self):
+        """
+            Method for testing to place an order
+        """
+        result = self.client().post('/api/v1/users/orders' ,content_type="application/json",data=json.dumps(ORDER),headers=self.get_token)
+        self.assertEqual(result.status_code, 200)
+        respond = json.loads(result.data.decode("utf8"))
+        self.assertEqual(result.status_code, 401)
+        self.assertIsInstance(respond, dict)
+    
        
     def test_fetch_all_orders(self):
         """
            Method for testing get all orders by the admin
         """
-        result = self.client().post('/api/v1/users/orders' ,content_type="application/json",data=json.dumps(ORDER),headers=self.get_token)
-        self.assertEqual(result.status_code, 200)
         result = self.client().get('/api/v1/orders',headers=self.get_token)
         respond = json.loads(result.data.decode("utf8"))
         self.assertEqual(result.status_code, 200)
@@ -52,7 +62,7 @@ class TestViews(unittest.TestCase):
         """
             Method for testing to get only one specfic order by the admin
         """
-        result = self.client().get('/api/v1/orders/1',content_type="application/json",data=json.dumps(ORDER),headers=self.get_token)
+        result = self.client().get('/api/v1/orders/1',content_type="application/json",headers=self.get_token)
         result2 = self.client().get('/api/v1/orders/a')
         respond = json.loads(result.data.decode("utf8"))
         self.assertEqual(result.status_code, 200)
@@ -63,23 +73,15 @@ class TestViews(unittest.TestCase):
         """
             Method for testing to get orders for a particular user
         """
-        result = self.client().get('/api/v1/users/orders',content_type="application/json",data=json.dumps(ORDER), headers=self.get_token)
+        result = self.client().get('/api/v1/users/orders',headers=self.get_token)
         respond = json.loads(result.data.decode("utf8"))
         self.assertEqual(result.status_code, 401)
         self.assertIsInstance(respond, dict)
 
-    def test_place_an__order(self):
+
+    def test_post_with_an_empty_without_a_token(self):
         """
-            Method for testing to place an order
-        """
-        result = self.client().post('/api/v1/users/orders')
-        respond = json.loads(result.data.decode("utf8"))
-        self.assertEqual(result.status_code, 401)
-        self.assertIsInstance(respond, dict)
-    
-    def test_post_with_an_empty_fields(self):
-        """
-            Method for testing the post function for empty fields to place an order
+            Method for testing the post function for checking a token
         """
         result = self.client().post('/api/v1/users/orders',
                                     content_type="application/json",
@@ -103,7 +105,7 @@ class TestViews(unittest.TestCase):
         """
             Method for testing to add an item on to the menu by admin
         """
-        result = self.client().post('/api/v1/menu',content_type="application/json",data=json.dumps(token_user),)
+        result = self.client().post('/api/v1/menu',content_type="application/json",data=json.dumps(NEW_ITEM),headers=self.get_token)
         respond = json.loads(result.data.decode("utf8"))
         self.assertEqual(result.status_code, 401)
         self.assertIsInstance(respond, dict)
@@ -114,7 +116,7 @@ class TestViews(unittest.TestCase):
             Method for testing toupdate an order_status by admin
         """
        
-        result = self.client().put('/api/v1/orders/1')
+        result = self.client().put('/api/v1/orders/1',content_type="application/json",data=json.dumps(ORDER_NOW), headers=self.get_token)
         respond = json.loads(result.data.decode("utf8"))
         self.assertEqual(result.status_code,401)
         self.assertIsInstance(respond, dict, )
