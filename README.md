@@ -7,7 +7,7 @@ Travis badge      [![Build Status](https://travis-ci.org/akram256/fast-food-db.s
 
 coverage          [![Coverage Status](https://coveralls.io/repos/github/akram256/fast-food-db/badge.svg?branch=orders)](https://coveralls.io/github/akram256/fast-food-db?branch=orders)
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/c154e0d80992384b203b/maintainability)](https://codeclimate.com/github/akram256/fast-food-db/maintainability)
+code climate    [![Maintainability](https://api.codeclimate.com/v1/badges/c154e0d80992384b203b/maintainability)](https://codeclimate.com/github/akram256/fast-food-db/maintainability)
 
 
 
