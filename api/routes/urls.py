@@ -2,7 +2,9 @@
 This module handels requests to urls.
 """
 from flask.views import MethodView
-from api.controllers.order_views import SignUp, Login, PlaceOrder,Getorder,Menu,Update,GetSpecific
+from api.controllers.user_controller import SignUp, Login
+from api.controllers.order_controller import PlaceOrder,Getorder,Update,GetSpecific
+from api.controllers.menu_controller import Menu
 # from models.db_link import linkdb
 
 

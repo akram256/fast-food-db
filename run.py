@@ -7,7 +7,7 @@ This is the main module
 """
 from flask import Flask
 from api.routes.urls import Urls
-from api.models.user_model import Users
+from api.models.database_model import Databaseconn
 from flask_jwt_extended import JWTManager
 
 
@@ -19,7 +19,7 @@ jwt = JWTManager(APP)
 
 @APP.before_first_request
 def create_tables():
-    table_handler=Users()
+    table_handler=Databaseconn()
     table_handler.create_tables()
     print("create_tables") 
 
