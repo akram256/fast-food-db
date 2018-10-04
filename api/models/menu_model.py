@@ -1,9 +1,9 @@
 """ 
     This is a Menu model
 """
-from api.models.user_model import Users
+from api.models.database_model import Databaseconn
 
-class Menu_now(Users):
+class Menu_now(Databaseconn):
     """
         this class handles all menu operations
     """

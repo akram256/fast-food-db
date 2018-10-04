@@ -1,10 +1,10 @@
 """ 
     This is an Order model
 """
-from api.models.user_model import Users
+from api.models.database_model import Databaseconn
 
 
-class Order_now(Users):
+class Order_now(Databaseconn):
     """
         this class handles all order methods
     """
