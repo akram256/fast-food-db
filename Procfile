@@ -1,1 +1,1 @@
-web: gunicorn --chdir fast-food-db run:APP
+web: gunicorn run:APP
