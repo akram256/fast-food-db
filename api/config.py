@@ -2,33 +2,45 @@
    Module for for defining the configurations
 """  
 import os
+
+
 class Config(object):
     """
        Method for defining the default environment
     """  
-    DEBUG = True
+    DEBUG = False
     TESTING = True
     SECRET_KEY = 'codeislove'
+    # postgresql://username:password@hostname/database
+
 
 class DevelopmentConfig(Config):
     """
        Method for defining the development environment
     """   
     DEBUG = True
-    TESTING = True
-    ENV = "development"
-    SECRET_KEY = 'codeislove'
+    # TESTING = False
+    # ENV = "development"
+    # SECRET_KEY = 'codeislove'
+    DATABASE_URL = 'postgresql://postgres:12345@localhost/fooddb'
+
+
 class TestingConfig(Config):
     """
         method for defining the development environment
     """
-    if os.getenv("TESTING"):
-        DATABASE_URL = 'postgres://postgres@host/fastfud'
     DEBUG = True
     TESTING = True
-    ENV = "TESTING"
-    SECRET_KEY = 'codeislove'
-    DATABASE ='fastfud'
+    FLASK_ENV = "TESTING"
+    DATABASE_URL = 'postgresql://postgres:12345@localhost/fastfud'
+
+
+# configurations = {
+#     'default': Config,
+#     'development':DevelopmentConfig,
+#     'testing': TestingConfig
+
+# }
 
 
 

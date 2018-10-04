@@ -5,7 +5,7 @@ import unittest
 import json
 import psycopg2
 from run import APP
-from api.models.db_model import GetAllOrder
+from api.models.user_model import Users
 from api.config import TestingConfig
 import os
 class TestViews(unittest.TestCase):
@@ -18,14 +18,20 @@ class TestViews(unittest.TestCase):
         """
            Method for making the client object
         """
-        # self.client = APP.test_client
-        if os.getenv("TESTING"):
-            self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
-        # else:
-        #     APP.config['Development'] = True
-        #     self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
-        self.app = APP
-        self.client = APP.test_client 
+        APP.config.from_object('api.config.TestingConfig')
+        self.client = APP.test_client
+        with self.client():
+            down_tables = Users()
+            down_tables.create_tables()
+
+    def tearDown(self):
+        """
+           Method for deleting tables in the database object
+        """
+        with self.client():
+            down_tables = Users()
+            down_tables.delete_tables()
+
     def test_sign(self):
         """
             Method for testing the post function which adds new user
@@ -145,28 +151,7 @@ class TestViews(unittest.TestCase):
                                     data=json.dumps(dict(email="", password="codeisgood")))
         self.assertEqual(result.status_code, 400)
     
-    # def tearDown(self):
-    #     commands = (
-    #         """DROP TABLE IF EXISTS "users" CASCADE;""",
-    #         """DROP TABLE IF EXISTS "orders" CASCADE;""",
-    #         """DROP TABLE IF EXISTS "menus" CASCADE;""")
-    #     try:
-    #         if(os.getenv("FLASK_ENV")) == "Production":
-    #             self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
-    #         else:
-    #             self.connection = psycopg2.connect(dbname='fooddb',
-    #                                                user='akram',
-    #                                                password='12345',
-    #                                                host='localhost',
-    #                                                port='5432')
-    #         self.connection.autocommit = True
-    #         self.cursor = self.connection.cursor()
-    #         for command in commands:
-    #             self.cursor.execute(command)
-    #     except(Exception, psycopg2.DatabaseError) as error:
 
-    #         raise error
-                
 
 
             

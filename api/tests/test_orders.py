@@ -5,9 +5,11 @@ import unittest
 import json
 import psycopg2
 from run import APP
-from api.models.db_model import GetAllOrder
+from api.models.user_model import Users
+from api.models.order_model import Order_now
+from api.models.menu_model import Menu_now
+from . import *
 import os
-# from flask_jwt_extended import  jwt_required, create_access_token, get_jwt_identity
 class TestViews(unittest.TestCase):
     """"
         Class for making tests on sign in
@@ -18,16 +20,29 @@ class TestViews(unittest.TestCase):
         """
            Method for making the client object
         """
+        APP.config.from_object('api.config.TestingConfig')
         self.client = APP.test_client
-        APP.config['TESTING'] = True
-        self.app = APP
-        # GetAllOrder.__init__(APP)
+        with self.client() as client:
+            down_tables = Users()
+            down_tables.create_tables()
+            self.post_token = post_auth_header(client)
+            self.get_token = get_auth_header(client)
 
+    def tearDown(self):
+        """
+           Method for deleting tables in the database object
+        """
+        with self.client():
+            down_tables = Users()
+            down_tables.delete_tables()
+       
     def test_fetch_all_orders(self):
         """
            Method for testing get all orders by the admin
         """
-        result = self.client().get('/api/v1/orders')
+        result = self.client().post('/api/v1/users/orders' ,content_type="application/json",data=json.dumps(ORDER),headers=self.get_token)
+        self.assertEqual(result.status_code, 200)
+        result = self.client().get('/api/v1/orders',headers=self.get_token)
         respond = json.loads(result.data.decode("utf8"))
         self.assertEqual(result.status_code, 200)
         self.assertIn('Orders', respond)
@@ -37,7 +52,7 @@ class TestViews(unittest.TestCase):
         """
             Method for testing to get only one specfic order by the admin
         """
-        result = self.client().get('/api/v1/orders/1')
+        result = self.client().get('/api/v1/orders/1',content_type="application/json",data=json.dumps(ORDER),headers=self.get_token)
         result2 = self.client().get('/api/v1/orders/a')
         respond = json.loads(result.data.decode("utf8"))
         self.assertEqual(result.status_code, 200)
@@ -48,7 +63,7 @@ class TestViews(unittest.TestCase):
         """
             Method for testing to get orders for a particular user
         """
-        result = self.client().get('/api/v1/users/orders')
+        result = self.client().get('/api/v1/users/orders',content_type="application/json",data=json.dumps(ORDER), headers=self.get_token)
         respond = json.loads(result.data.decode("utf8"))
         self.assertEqual(result.status_code, 401)
         self.assertIsInstance(respond, dict)
@@ -88,7 +103,7 @@ class TestViews(unittest.TestCase):
         """
             Method for testing to add an item on to the menu by admin
         """
-        result = self.client().post('/api/v1/menu')
+        result = self.client().post('/api/v1/menu',content_type="application/json",data=json.dumps(token_user),)
         respond = json.loads(result.data.decode("utf8"))
         self.assertEqual(result.status_code, 401)
         self.assertIsInstance(respond, dict)
@@ -104,25 +119,3 @@ class TestViews(unittest.TestCase):
         self.assertEqual(result.status_code,401)
         self.assertIsInstance(respond, dict, )
         
-    
-    # def tearDown(self):
-    #     commands = (
-    #         """DROP TABLE IF EXISTS "users" CASCADE;""",
-    #         """DROP TABLE IF EXISTS "orders" CASCADE;""",
-    #         """DROP TABLE IF EXISTS "menus" CASCADE;""")
-    #     try:
-    #         if(os.getenv("FLASK_ENV")) == "Production":
-    #             self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
-    #         else:
-    #             self.connection = psycopg2.connect(dbname='fooddb',
-    #                                                user='akram',
-    #                                                password='12345',
-    #                                                host='localhost',
-    #                                                port='5432')
-    #         self.connection.autocommit = True
-    #         self.cursor = self.connection.cursor()
-    #         for command in commands:
-    #             self.cursor.execute(command)
-    #     except(Exception, psycopg2.DatabaseError) as error:
-
-    #         raise error
