@@ -37,14 +37,13 @@ class TestViews(unittest.TestCase):
             down_tables = Users()
             down_tables.delete_tables()
 
-    def test_sign(self):
+    def test_signup(self):
         """
             Method for testing the post function which adds new user
         """
         result = self.client().post('/api/v1/auth/signup',
                                     content_type="application/json",
-                                    data=json.dumps(dict(user_name="akram", email="a4a@gmail.com",
-                                                         password="codeisgood")))
+                                    data=json.dumps(dict(OTHER_USER)))
         respond = json.loads(result.data.decode("utf8"))
         self.assertIn('message', respond)
         self.assertIsInstance(respond, dict)
@@ -120,6 +119,17 @@ class TestViews(unittest.TestCase):
         respond = json.loads(result.data.decode("utf8"))
         self.assertIn('Password', respond)        
         self.assertTrue(result.json["Password"])
+
+
+    def test_login(self):
+        self.test_signup()
+        result = self.client().post('/api/v1/auth/login',
+                                    content_type="application/json",
+                                    data=json.dumps(dict(OTHER_USER)))
+        self.assertEqual(result.status_code, 200)
+        result = json.loads(result.data.decode())
+        self.assertTrue(['post_token'])
+
     
     def test_login_with_a_username(self):
         """
@@ -134,15 +144,15 @@ class TestViews(unittest.TestCase):
         self.assertEqual(result.status_code, 400)
         self.assertTrue(result.json["message"])
 
-    def test_login_with_email(self):
+    def test_login_with_without_password(self):
         """
-            Method for testing the post function which logins in a user
+            Method for testing the post function which logins in a user with wrong password
         """
         result = self.client().post('/api/v1/auth/login',
                                     content_type="application/json",
-                                    data=json.dumps(dict(email="a4a@gmail.com", password="meanda4a")))
+                                    data=json.dumps(dict(email="a4a@gmail.com", password="meand")))
         respond = json.loads(result.data.decode("utf8"))
-        self.assertIn('message', respond)
+        self.assertIn( "message", respond)
         self.assertIsInstance(respond, dict)
         self.assertEqual(result.status_code, 401)
         self.assertTrue(result.json["message"])
@@ -155,6 +165,8 @@ class TestViews(unittest.TestCase):
                                     content_type="application/json",
                                     data=json.dumps(dict(email="", password="codeisgood")))
         self.assertEqual(result.status_code, 400)
+       
+
     
 
 

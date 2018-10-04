@@ -12,6 +12,7 @@ OTHER_USER = {
     "user_name": "mukasa",
     "email": "mukasa@gmail.com",
     "password": "12345678",
+    "is_admin":False,
 }
 EMPTY_NAME = {
     "user_name": "       ",

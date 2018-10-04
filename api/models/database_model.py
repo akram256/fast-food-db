@@ -5,6 +5,9 @@ import os
 import psycopg2
 import datetime
 from flask import request, jsonify
+from flask.views import MethodView
+
+
 
 
 class Databaseconn:
@@ -16,23 +19,19 @@ class Databaseconn:
     """
     
     def __init__(self):
+        # self.cursor = 
+
         """
         This method creates the connection object 
         """
         try:
             from run import APP
-            # postgresql://username:password@hostname/database
             if(os.getenv("FLASK_ENV")) == "Production":
                 self.connection = psycopg2.connect(os.getenv("DATABASE_URL"))
             elif(APP.config["TESTING"]):
                 self.connection = psycopg2.connect('postgresql://postgres:12345@localhost/fastfud')
             else:
                 self.connection = psycopg2.connect("postgresql://postgres:12345@localhost/fooddb")
-                # self.connection = psycopg2.connect(dbname='fooddb',
-                #                                    user='postgres',
-                #                                    password='12345',
-                #                                    host='localhost',
-                #                                    port='5432')
             self.connection.autocommit = True
             self.cursor = self.connection.cursor()
 

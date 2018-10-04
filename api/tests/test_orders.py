@@ -109,6 +109,7 @@ class TestViews(unittest.TestCase):
         respond = json.loads(result.data.decode("utf8"))
         self.assertEqual(result.status_code, 401)
         self.assertIsInstance(respond, dict)
+
     
 
     def test_updating_order_status(self):
