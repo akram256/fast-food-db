@@ -26,3 +26,4 @@ ignore_errors = False
 
 [html]
 directory = coverage_report
+
