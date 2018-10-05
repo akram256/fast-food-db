@@ -19,7 +19,7 @@ class Databaseconn:
     """
     
     def __init__(self):
-        # self.cursor = 
+    
 
         """
         This method creates the connection object 
@@ -53,7 +53,7 @@ class Databaseconn:
                     username VARCHAR(50) NOT NULL,
                     email VARCHAR(50) UNIQUE NOT NULL,
                     password VARCHAR(80) NOT NULL,
-                    is_admin BOOLEAN NULL DEFAULT TRUE
+                    is_admin BOOLEAN NULL DEFAULT FALSE
                     
                 )
             """,
@@ -85,6 +85,7 @@ class Databaseconn:
           
                 )
             """,)
+    
 
         try:
             
@@ -93,3 +94,15 @@ class Databaseconn:
 
         except(Exception, psycopg2.DatabaseError) as error:
             raise error
+
+    def delete_tables(self):
+       
+        """
+            this method is for dropping tables
+        """
+        table_names=['users','orders','menus']
+        for name in table_names:
+            self.cursor.execute("DROP TABLE IF EXISTS {} CASCADE".format(name))
+        
+
+   
