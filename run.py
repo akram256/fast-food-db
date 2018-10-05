@@ -23,10 +23,7 @@ jwt = JWTManager(APP)
 @APP.before_first_request
 def create_tables():
     table_handler=Databaseconn()
-    # table_handler.delete_tables()
-    # print("drop tables")
     table_handler.create_tables()
-    # print("created tables") 
     user = Users()
     user.set_admin(1)
 
