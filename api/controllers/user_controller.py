@@ -9,14 +9,14 @@ from api.models.user_model import Users
 # from api.models.order_model import Order_now
 # from api.models.menu_model import Menu_now
 from flask_jwt_extended import  jwt_required, create_access_token, get_jwt_identity
-import flasgger
+# import flasgger
 
 
 class SignUp(MethodView):
     """
        Class contains method plus all signup performances
     """
-    @flasgger.swag_from("../docs/signup.yml")
+    # @flasgger.swag_from("../docs/signup.yml")
     def post(self):
         """
            Method for creating new user
@@ -64,7 +64,7 @@ class Login(MethodView):
     """
        Class for logging in the user
     """
-    @flasgger.swag_from("../docs/login.yml")
+    # @flasgger.swag_from("../docs/login.yml")
     def post(self):
         """
            Method for logging in  user

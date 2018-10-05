@@ -80,9 +80,12 @@ class Order_now(Databaseconn):
         """
         dbhandler = Databaseconn()
         dbhandler.cursor.execute("SELECT * FROM menus WHERE item_id= %s",(item_id, ) )
-        data=dbhandler.cursor.fetchone()
-        print(data)
+        new_order=dbhandler.cursor.fetchone()
+        if not new_order:
+            return "item_id does not exit, please check menu and place order again"
         add_order_query = "INSERT INTO orders(user_id, item_id) VALUES( %s,%s);"
-
         dbhandler.cursor.execute(add_order_query,(user_id,item_id,))
         return "Order has been Placed successfully"
+       
+        
+       

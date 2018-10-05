@@ -28,7 +28,7 @@ class Getorder(MethodView):
 
         user_id = get_jwt_identity()
         is_admin = new_object.check_admin(user_id)
-        if user_id and not  is_admin:
+        if user_id and  is_admin:
             if order_id is None:
                 orders_list = new_order.get_all_orders()
                 if orders_list == "No orders available at the moment":
@@ -102,11 +102,12 @@ class PlaceOrder(MethodView):
         if not  request.json['item_id']:
             return jsonify({'Missing item': 'Please input the item_id'}), 400
 
-        
+        # if request.json['item_id']
         user_id = get_jwt_identity()
         new_order_data = place_order.place_new_order(str(user_id), request.json ['item_id'])
         if new_order_data:
             return jsonify({'message': new_order_data}), 201
+        return jsonify({'message':'item_id does not exit'})
         
         
             
