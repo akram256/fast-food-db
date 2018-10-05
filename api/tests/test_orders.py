@@ -36,7 +36,7 @@ class TestViews(unittest.TestCase):
            Method for deleting tables in the database object
         """
         with self.client():
-            down_tables = Databasseconn()
+            down_tables = Databaseconn()
             down_tables.delete_tables()
 
     def test_post_with_an_empty_without_a_token(self):
