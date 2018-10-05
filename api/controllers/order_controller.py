@@ -7,7 +7,6 @@ from flask.views import MethodView
 from api.models.user_model import Databaseconn
 from api.models.user_model import Users
 from api.models.order_model import Order_now
-# from api.models.menu_model import Menu_now
 from flask_jwt_extended import  jwt_required, create_access_token, get_jwt_identity
 
 
@@ -28,8 +27,8 @@ class Getorder(MethodView):
         new_order = Order_now()
 
         user_id = get_jwt_identity()
-        is_admin_now = new_object.get_user_with_id(user_id)
-        if user_id and not  is_admin_now :
+        is_admin = new_object.check_admin(user_id)
+        if user_id and not  is_admin:
             if order_id is None:
                 orders_list = new_order.get_all_orders()
                 if orders_list == "No orders available at the moment":
@@ -67,11 +66,11 @@ class Update(MethodView):
         """
             this method for putting or updating the order_status
         """
-        is_admin = Users()
+        user = Users()
         update_order = Order_now()
         user_id = get_jwt_identity()
-        is_admin_now = is_admin.get_user_with_id(user_id)
-        if user_id and not is_admin_now :
+        is_admin_now = user.check_admin(user_id)
+        if user_id and is_admin_now :
             keys = ("order_now",)
             if not set(keys).issubset(set(request.json)):
                 return jsonify({'message': 'Your request has Empty feilds'}), 400
@@ -83,7 +82,7 @@ class Update(MethodView):
             if new_order_status:
                 return jsonify({'message': "Order_status has been updated"}), 200
             return jsonify({"message":'No order to update'})
-        return jsonify({'Alert':"Not Authorised to perform this task"})
+        return jsonify({'Alert':"Not Authorised to perform this task"}),401
 
 class PlaceOrder(MethodView):
     """

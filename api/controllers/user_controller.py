@@ -9,12 +9,14 @@ from api.models.user_model import Users
 # from api.models.order_model import Order_now
 # from api.models.menu_model import Menu_now
 from flask_jwt_extended import  jwt_required, create_access_token, get_jwt_identity
+import flasgger
 
 
 class SignUp(MethodView):
     """
        Class contains method plus all signup performances
     """
+    @flasgger.swag_from("../docs/signup.yml")
     def post(self):
         """
            Method for creating new user
@@ -52,7 +54,7 @@ class SignUp(MethodView):
 
        
         user_details = new_user.register_a_user(request.json['user_name'], request.json['email'], request.json['password'])
-        if user_details == "email exits friend":
+        if user_details == "email exits boss, use another email":
             return jsonify({'message': user_details}), 401
 
         return jsonify({'message': user_details}), 201
@@ -62,6 +64,7 @@ class Login(MethodView):
     """
        Class for logging in the user
     """
+    @flasgger.swag_from("../docs/login.yml")
     def post(self):
         """
            Method for logging in  user
@@ -92,4 +95,4 @@ class Login(MethodView):
                 "message": "User logged in successfully"
             }), 200
 
-        return jsonify({"message": "Wrong username or passwerd"}), 401
+        return jsonify({"message": "Wrong username or passwerd"}), 400
