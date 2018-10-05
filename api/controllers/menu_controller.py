@@ -8,14 +8,14 @@ from api.models.user_model import Databaseconn
 from api.models.user_model import Users
 from api.models.menu_model import Menu_now
 from flask_jwt_extended import  jwt_required, create_access_token, get_jwt_identity
-# import flasgger
+import flasgger
 
 class Menu(MethodView):
     """
         this is a class method for items to be added and gotten from the menu
     """
 
-    # @flasgger.swag_from("../docs/get_add_items.yml")
+    @flasgger.swag_from("../docs/get_add_items.yml")
     @jwt_required
     def post(self):
         """

@@ -94,6 +94,7 @@ class TestViews(unittest.TestCase):
         print(respond)
         self.assertEqual(result.status_code,400)
         self.assertIn('Missing status', respond)
+        self.assertTrue(['Missing status'], 'order not updated')
         self.assertIsInstance(respond, dict, )
 
     def test_updating_order_status(self):
@@ -104,20 +105,32 @@ class TestViews(unittest.TestCase):
         result = self.client().put('/api/v1/orders/2', data=json.dumps(ORDER_STATUS), headers=self.post_token)
         respond = json.loads(result.data.decode("utf8"))
         print(respond)
-        self.assertEqual(result.status_code,200)
+        self.assertEqual(result.status_code, 200)
+        self.assertTrue(['message'], 'order has been updated' )
         self.assertIn('message', respond)
         self.assertIsInstance(respond, dict, )
 
 
-    # def test_fetch_all_orders(self):
+    def test_fetch_all_orders(self):
+        """
+           Method for testing get all orders by the admin
+        """
+        result = self.client().get('/api/v1/orders',headers=self.get_token)
+        respond = json.loads(result.data.decode("utf8"))
+        print(str(respond))
+        self.assertEqual(result.status_code, 401)
+        self.assertIn('msg', respond)
+        self.assertIsInstance(respond, dict)
+
+    # def test_getting_one_order(self):
     #     """
-    #        Method for testing get all orders by the admin
+    #         This method tests for getting one order from the menu
     #     """
-    #     result = self.client().get('/api/v1/orders',headers=self.get_token)
+    #     result = self.client().get('/api/v1/orders/1',headers=self.get_token)
     #     respond = json.loads(result.data.decode("utf8"))
     #     print(str(respond))
-    #     self.assertEqual(result.status_code, 200)
-    #     self.assertIn('Orders', respond)
+    #     self.assertEqual(result.status_code, 401)
+    #     self.assertIn('msg', respond)
     #     self.assertIsInstance(respond, dict)
 
     
