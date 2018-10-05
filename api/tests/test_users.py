@@ -6,6 +6,7 @@ import json
 import psycopg2
 from run import APP
 from api.models.user_model import Users
+from api.models.database_model import Databaseconn
 from api.models.order_model import Order_now
 from api.models.menu_model import Menu_now
 from api.config import TestingConfig
@@ -24,7 +25,7 @@ class TestViews(unittest.TestCase):
         APP.config.from_object('api.config.TestingConfig')
         self.client = APP.test_client
         with self.client() as client:
-            down_tables = Users()
+            down_tables = Databaseconn()
             down_tables.create_tables()
             self.post_token = post_auth_header(client)
             self.get_token = get_auth_header(client)
@@ -34,7 +35,7 @@ class TestViews(unittest.TestCase):
            Method for deleting tables in the database object
         """
         with self.client():
-            down_tables = Users()
+            down_tables = Databaseconn()
             down_tables.delete_tables()
 
     def test_signup(self):
@@ -154,7 +155,7 @@ class TestViews(unittest.TestCase):
         respond = json.loads(result.data.decode("utf8"))
         self.assertIn( "message", respond)
         self.assertIsInstance(respond, dict)
-        self.assertEqual(result.status_code, 401)
+        self.assertEqual(result.status_code, 400)
         self.assertTrue(result.json["message"])
 
     def test_login_without_email(self):

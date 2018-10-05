@@ -1,4 +1,7 @@
 import json
+from api.models.user_model import Users
+
+
 """
 module init tests
 """
@@ -36,17 +39,31 @@ ORDER = {
 EMPTY_ITEM = {
     "item": "     ",
 }
-NEW_ITEM = {
+MENU_ITEM1 = {
     "item_name": "matooke",
 }
+MENU_ITEM2 = {
+    "item_name": "rice",
+}
+MENU_ITEM3 = {
+    "item_name": "posho",
+}
 ORDER_NOW = {
-    "order_NOW": "Complete"
+    "order_now": ""
+}
+ORDER_STATUS = {
+    "order_now": "pending"
 }
 
 def get_token(client):
+    # signup admin
     result = client.post('/api/v1/auth/signup',content_type="application/json",data=json.dumps(token_user))
     if result.status_code != 201:
         raise Exception("failed to signup user")
+    # give user admin rights
+    user = Users()
+    user.set_admin(1)
+    # login user and get access token
     result = client.post('/api/v1/auth/login',content_type="application/json",data=json.dumps(token_user))
     if result.status_code != 200:
         raise Exception("failed to login user")
@@ -57,13 +74,21 @@ def get_token(client):
 def post_auth_header(client):
     token = get_token(client)
     return{
+        'Content-type':"application/json",
         "authorization": "Bearer {}".format(token) 
     }
 
 def get_auth_header(client):
     token = get_token(client)
     return{
-        'Content_type':"application/json",
-        "token": token
+        'Content-Type':"application/json",
+        "Token ": token
     }
-   
+
+def create_menu(client, token):
+    request = client.post('/api/v1/menu',data=json.dumps(MENU_ITEM1),headers=token)
+    if request.status_code != 201:
+        raise Exception("failed to add item to menu")
+    request = client.post('/api/v1/menu',data=json.dumps(MENU_ITEM2),headers=token)
+    if request.status_code != 201:
+        raise Exception("failed to add item to menu")
