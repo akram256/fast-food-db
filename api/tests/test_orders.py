@@ -122,15 +122,15 @@ class TestViews(unittest.TestCase):
         self.assertIn('msg', respond)
         self.assertIsInstance(respond, dict)
 
-    # def test_getting_one_order(self):
-    #     """
-    #         This method tests for getting one order from the menu
-    #     """
-    #     result = self.client().get('/api/v1/orders/1',headers=self.get_token)
-    #     respond = json.loads(result.data.decode("utf8"))
-    #     print(str(respond))
-    #     self.assertEqual(result.status_code, 401)
-    #     self.assertIn('msg', respond)
-    #     self.assertIsInstance(respond, dict)
+    def test_getting_one_order(self):
+        """
+            This method tests for getting one order from the menu
+        """
+        result = self.client().get('/api/v1/orders/1',headers=self.get_token)
+        respond = json.loads(result.data.decode("utf8"))
+        print(str(respond))
+        self.assertEqual(result.status_code, 401)
+        self.assertIn('msg', respond)
+        self.assertIsInstance(respond, dict)
 
     
