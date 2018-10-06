@@ -124,7 +124,7 @@ class TestViews(unittest.TestCase):
 
     def test_getting_one_order(self):
         """
-            This method tests for getting one order from the menu
+            This method tests for getting one order 
         """
         result = self.client().get('/api/v1/orders/1',headers=self.get_token)
         respond = json.loads(result.data.decode("utf8"))
@@ -132,5 +132,17 @@ class TestViews(unittest.TestCase):
         self.assertEqual(result.status_code, 401)
         self.assertIn('msg', respond)
         self.assertIsInstance(respond, dict)
+
+    def test_getting_all_items_on_the_menu(self):
+        """
+            This method tests for getting all items from the menu
+        """
+        result = self.client().get('/api/v1/menu',headers=self.get_token)
+        respond = json.loads(result.data.decode("utf8"))
+        print(str(respond))
+        self.assertEqual(result.status_code, 200)
+        self.assertIn('Menu', respond)
+        self.assertIsInstance(respond, dict)
+
 
     
