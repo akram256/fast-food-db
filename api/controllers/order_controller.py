@@ -39,6 +39,7 @@ class Getorder(MethodView):
             if orders_list == "No orders available at the moment":
                 return jsonify({"Order": "No orders found at the moment for the order_id"}), 404
             return jsonify({"Order": orders_list}), 200
+        return jsonify({'Alert':"Not Authorised to perform this task"})
 
 class GetSpecific(MethodView):
     @jwt_required
@@ -102,7 +103,8 @@ class PlaceOrder(MethodView):
         if not  request.json['item_id']:
             return jsonify({'Missing item': 'Please input the item_id'}), 400
 
-        # if request.json['item_id']
+        if  request.json['item_id'] == str:
+            return jsonify({'Wrong input, You should input a number or int'})
         user_id = get_jwt_identity()
         new_order_data = place_order.place_new_order(str(user_id), request.json ['item_id'])
         if new_order_data:

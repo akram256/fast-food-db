@@ -86,6 +86,7 @@ class Order_now(Databaseconn):
         add_order_query = "INSERT INTO orders(user_id, item_id) VALUES( %s,%s);"
         dbhandler.cursor.execute(add_order_query,(user_id,item_id,))
         return "Order has been Placed successfully"
+        
        
         
        
